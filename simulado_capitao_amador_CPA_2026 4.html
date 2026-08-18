@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulado Capitão-Amador CPA 2026</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Arial,sans-serif;background:#eef4f8;color:#17324d}
+  .wrap{max-width:760px;margin:0 auto;padding:20px}
+  .card{background:white;border-radius:18px;padding:24px;box-shadow:0 6px 25px #00000014}
+  h1{margin:0 0 8px;font-size:25px}
+  .sub{color:#607789;margin-bottom:20px}
+  .top{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:18px}
+  .badge{background:#e6f1f8;padding:8px 12px;border-radius:20px;font-weight:bold}
+  .bar{height:8px;background:#e7edf1;border-radius:8px;overflow:hidden;margin:12px 0 24px}
+  .fill{height:100%;width:2.5%;background:#1976a8;transition:.25s}
+  .q{font-size:20px;line-height:1.45;font-weight:700;margin:20px 0}
+  .option{display:block;border:2px solid #dce5eb;border-radius:12px;padding:15px;margin:11px 0;cursor:pointer;transition:.15s}
+  .option:hover{border-color:#1976a8;background:#f5fbff}
+  .option input{margin-right:10px;transform:scale(1.15)}
+  button{border:0;border-radius:12px;padding:14px 20px;font-size:16px;font-weight:bold;cursor:pointer;background:#1976a8;color:white}
+  button.secondary{background:#dfeaf0;color:#17324d}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  .actions{display:flex;justify-content:space-between;gap:10px;margin-top:24px}
+  .result{text-align:center}
+  .score{font-size:52px;font-weight:800;margin:15px 0;color:#1976a8}
+  .review{text-align:left;margin-top:25px}
+  .review-item{padding:14px;border-radius:12px;background:#f6f8fa;margin:10px 0}
+  .ok{border-left:5px solid #2e8b57}
+  .bad{border-left:5px solid #c94c4c}
+  .small{font-size:13px;color:#687d8b}
+  @media(max-width:520px){.card{padding:18px}.q{font-size:18px}.actions button{flex:1}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card" id="app"></div>
+</div>
+<script>
+const questions = [
+["O Capitão-Amador está habilitado a conduzir embarcações:",["Apenas em águas interiores.","Apenas na navegação costeira.","Nos limites da navegação oceânica, exceto moto aquática.","Somente em águas brasileiras."],"C"],
+["De acordo com o RIPEAM, uma embarcação é considerada em situação de rumos cruzados quando:","As embarcações navegam exatamente em rumos opostos.|Existe risco de colisão e as embarcações se aproximam por rumos que se cruzam.|Uma embarcação está ultrapassando outra.|As duas embarcações estão paradas.".split("|"),"B"],
+["Em uma situação de rumos cruzados, quando duas embarcações de propulsão mecânica têm risco de colisão, deve manobrar:","A embarcação que avista a outra por bombordo.|A embarcação que avista a outra por boreste.|Sempre a embarcação maior.|Sempre a embarcação mais rápida.".split("|"),"B"],
+["Uma embarcação que está ultrapassando outra deve:","Manter seu rumo e velocidade.|Ser considerada embarcação com preferência.|Manter-se afastada da embarcação ultrapassada até ficar completamente safa.|Apitar continuamente até concluir a ultrapassagem.".split("|"),"C"],
+["No RIPEAM, a embarcação que tem obrigação de se manter afastada deve, sempre que possível:","Alterar o rumo para bombordo.|Alterar o rumo para boreste, quando apropriado.|Parar imediatamente o motor.|Fazer uma guinada de 180°.".split("|"),"B"],
+["Em condições de visibilidade restrita, uma embarcação de propulsão mecânica com seguimento pela água deve:","Navegar em velocidade máxima para sair rapidamente da área.|Navegar em velocidade segura, adaptada às circunstâncias.|Desligar obrigatoriamente o radar.|Navegar somente com luzes de navegação apagadas.".split("|"),"B"],
+["O radar, utilizado corretamente, permite ao navegante:","Determinar sozinho a profundidade de qualquer local.|Detectar e acompanhar alvos e auxiliar na avaliação de risco de colisão.|Substituir completamente a observação visual.|Determinar automaticamente o estado de conservação do casco.".split("|"),"B"],
+["O AIS é utilizado principalmente para:","Medir a profundidade da água.|Transmitir e receber informações de identificação e movimento de embarcações equipadas.|Medir a velocidade do vento.|Substituir o GPS em qualquer situação.".split("|"),"B"],
+["O GPS fornece principalmente informações relacionadas a:","Posição, velocidade e tempo.|Pressão atmosférica e temperatura.|Altura das ondas.|Profundidade abaixo da quilha.".split("|"),"A"],
+["A utilização simultânea de GPS, radar, carta náutica e observação visual é importante porque:","Todos os equipamentos apresentam exatamente o mesmo tipo de informação.|Permite confrontar informações e reduzir a possibilidade de erro de navegação.|Elimina completamente a necessidade de conhecimento náutico.|Dispensa a consulta às publicações náuticas.".split("|"),"B"],
+["Em uma carta náutica, uma isóbata representa:","Uma linha que une pontos de mesma profundidade.|Uma linha que une pontos de mesma pressão atmosférica.|Uma linha de igual velocidade do vento.|Uma linha de igual declinação magnética.".split("|"),"A"],
+["A rosa dos ventos de uma carta náutica é utilizada para:","Identificar exclusivamente profundidades.|Auxiliar na determinação de direções e rumos.|Identificar somente correntes de maré.|Determinar automaticamente a posição da embarcação.".split("|"),"B"],
+["A publicação Lista de Faróis tem como finalidade principal fornecer informações sobre:","Portos e preços de combustível.|Características e localização dos sinais luminosos de auxílio à navegação.|Condições mecânicas das embarcações.|Previsões meteorológicas de longo prazo.".split("|"),"B"],
+["Os Avisos aos Navegantes têm como uma de suas finalidades:","Informar alterações relevantes para a navegação e atualização das cartas e publicações.|Registrar somente acidentes envolvendo embarcações de pesca.|Informar preços de marina.|Substituir definitivamente as cartas náuticas.".split("|"),"A"],
+["A derrota planejada antes de uma viagem deve levar em consideração:","Apenas a distância até o destino.|Cartas, perigos, meteorologia, autonomia, equipamentos e condições previstas.|Somente o consumo de combustível.|Apenas a velocidade máxima da embarcação.".split("|"),"B"],
+["A navegação estimada é aquela em que:","A posição é determinada exclusivamente por satélite.|A posição é determinada considerando uma posição conhecida e os movimentos realizados posteriormente.|A posição é obtida apenas por observação de faróis.|Não é possível utilizar rumo e velocidade.".split("|"),"B"],
+["A diferença entre rumo e proa está relacionada ao fato de que:","Rumo representa a direção do deslocamento, enquanto proa indica a direção para a qual a embarcação está apontada.|São sempre exatamente a mesma coisa.|Proa só existe em embarcações a vela.|Rumo é determinado exclusivamente pelo radar.".split("|"),"A"],
+["O efeito do vento sobre uma embarcação pode provocar:","Apenas alteração da velocidade.|Deriva e alteração da trajetória.|Somente alteração da profundidade.|Nenhuma alteração significativa.".split("|"),"B"],
+["A corrente marítima pode provocar:","Deslocamento da embarcação em relação à água.|Somente aumento da profundidade.|Alteração da pressão atmosférica.|Alteração da frequência dos faróis.".split("|"),"A"],
+["Quando há corrente transversal forte, uma embarcação pode:","Manter necessariamente sua trajetória sobre o fundo sem qualquer correção.|Ser deslocada lateralmente em relação à derrota planejada.|Ficar obrigatoriamente sem governo.|Perder automaticamente sua capacidade de propulsão.".split("|"),"B"],
+["A pressão atmosférica normalmente é medida por meio de:","Anemômetro.","Barômetro.","Higrômetro.","Pluviômetro."],"B"],
+["Uma queda significativa da pressão atmosférica pode indicar:","Necessariamente tempo excelente.|Possibilidade de mudança de tempo e aproximação de sistema meteorológico.|Ausência total de vento.|Redução obrigatória da altura das ondas.".split("|"),"B"],
+["O anemômetro é utilizado para medir:","Temperatura.","Velocidade do vento.","Pressão atmosférica.","Umidade relativa."],"B"],
+["O barômetro é especialmente útil a bordo para:","Acompanhar a evolução da pressão atmosférica.|Medir a profundidade.|Medir a velocidade da embarcação.|Determinar a posição geográfica.".split("|"),"A"],
+["Uma frente fria está associada, em geral, à:","Mudança nas condições meteorológicas.|Ausência obrigatória de nuvens.|Impossibilidade de ocorrência de ventos fortes.|Redução obrigatória da pressão do mar.".split("|"),"A"],
+["Em uma tempestade com possibilidade de raios, uma medida adequada é:","Permanecer em áreas externas elevadas da embarcação.|Evitar contato desnecessário com estruturas metálicas e buscar abrigo adequado.|Utilizar o rádio portátil encostado em estruturas metálicas.|Permanecer próximo ao mastro.".split("|"),"B"],
+["Ondas de grande altura representam risco porque podem:","Afetar estabilidade, governo e segurança da embarcação.|Somente diminuir a velocidade do GPS.|Não oferecer risco a embarcações de grande porte.|Impedir apenas o funcionamento do rádio.".split("|"),"A"],
+["Ao receber previsão de condições meteorológicas severas para a região da derrota, a atitude mais segura é:","Ignorar a previsão se o céu estiver limpo no momento da saída.|Avaliar a possibilidade de alterar, adiar ou interromper a viagem.|Aumentar a velocidade para chegar antes da mudança do tempo.|Navegar exclusivamente utilizando o piloto automático.".split("|"),"B"],
+["Em caso de homem ao mar, uma das primeiras providências deve ser:","Abandonar imediatamente a embarcação.|Dar o alarme, manter contato visual com a vítima e iniciar o procedimento de recuperação.|Desligar todos os equipamentos de comunicação.|Continuar a navegação normalmente.".split("|"),"B"],
+["Uma boia salva-vidas lançada à vítima de homem ao mar deve:","Ser lançada o mais próximo possível da vítima, considerando segurança.|Ser guardada para uso posterior.|Ser lançada somente depois que a vítima desaparecer de vista.|Ser amarrada ao mastro.".split("|"),"A"],
+["Em caso de incêndio a bordo, a primeira preocupação deve ser:","Garantir a segurança das pessoas e combater o incêndio de forma adequada.|Salvar primeiro objetos pessoais.|Abrir todas as portas e escotilhas.|Aumentar a ventilação do compartimento.".split("|"),"A"],
+["Para um incêndio envolvendo combustível líquido, deve-se utilizar:","Jato de água diretamente sobre o combustível.|Agente extintor apropriado para incêndios de líquidos inflamáveis.|Apenas pano molhado.|Água do mar em qualquer circunstância.".split("|"),"B"],
+["Uma embarcação que faz navegação oceânica deve possuir meios adequados de comunicação para:","Entretenimento da tripulação.|Comunicar situações normais e de emergência.|Substituir todos os equipamentos de navegação.|Apenas conversar com outras embarcações de esporte.".split("|"),"B"],
+["O canal 16 do VHF marítimo é internacionalmente utilizado para:","Comunicação exclusiva entre marinas.|Socorro, segurança e chamada.|Conversas particulares prolongadas.|Comunicação com familiares em terra.".split("|"),"B"],
+["O sinal de socorro MAYDAY deve ser utilizado quando:","Existe perigo grave e iminente que ameaça a vida ou a embarcação.|A embarcação está atrasada.|O combustível está um pouco abaixo do planejado.|O comandante deseja conversar com outra embarcação.".split("|"),"A"],
+["Ao abandonar uma embarcação em uma situação de emergência, deve-se:","Levar, quando possível, meios de comunicação, sinalização e equipamentos de sobrevivência.|Abandonar todos os equipamentos.|Entrar na água sem colete para nadar mais rápido.|Separar-se imediatamente do restante das pessoas.".split("|"),"A"],
+["Em uma situação de sobrevivência no mar, uma das prioridades é:","Economizar água potável e aumentar as chances de localização e resgate.|Consumir toda a água disponível logo no início.|Separar-se da embarcação ou balsa sempre que possível.|Retirar os coletes para maior conforto.".split("|"),"A"],
+["O EPIRB é um equipamento destinado principalmente a:","Transmitir sinal de emergência para auxiliar na localização da embarcação ou pessoas em perigo.|Medir a profundidade.|Controlar automaticamente o motor.|Prever a altura das ondas.".split("|"),"A"],
+["Antes de uma viagem oceânica, é fundamental verificar:","Apenas combustível e óleo do motor.|Documentação, condições da embarcação, equipamentos de segurança, comunicação, navegação, meteorologia e autonomia.|Apenas o GPS.|Somente os coletes salva-vidas.".split("|"),"B"],
+["Durante uma navegação oceânica, o comandante percebe que as condições meteorológicas estão piorando rapidamente e que a situação pode comprometer a segurança da embarcação. A decisão mais adequada é:","Prosseguir obrigatoriamente para cumprir o planejamento original.|Avaliar imediatamente alternativas seguras, considerando abrigo, alteração da derrota ou retorno.|Aumentar a velocidade ao máximo independentemente das condições do mar.|Desligar os equipamentos eletrônicos para evitar distrações.".split("|"),"B"]
+];
+
+let current=0, answers=Array(questions.length).fill(null);
+const letters=["A","B","C","D"];
+
+function render(){
+  const app=document.getElementById("app");
+  if(current===questions.length){showResult();return}
+  const [text,opts,correct]=questions[current];
+  app.innerHTML=`
+    <h1>⚓ Simulado Capitão-Amador</h1>
+    <div class="sub">CPA 2026 • 40 questões • sem cálculos</div>
+    <div class="top"><span class="badge">Questão ${current+1} de ${questions.length}</span><span class="small">${Math.round((current/questions.length)*100)}% concluído</span></div>
+    <div class="bar"><div class="fill" style="width:${((current+1)/questions.length)*100}%"></div></div>
+    <div class="q">${current+1}. ${text}</div>
+    <div>${opts.map((o,i)=>`<label class="option"><input type="radio" name="answer" value="${letters[i]}" ${answers[current]===letters[i]?"checked":""} onchange="answers[current]=this.value"> <strong>${letters[i]})</strong> ${o}</label>`).join("")}</div>
+    <div class="actions">
+      <button class="secondary" onclick="prev()" ${current===0?"disabled":""}>Anterior</button>
+      <button onclick="next()">${current===questions.length-1?"Finalizar prova":"Próxima"}</button>
+    </div>`;
+}
+function next(){
+  if(!answers[current]){alert("Escolha uma alternativa antes de continuar.");return}
+  current++;render();
+}
+function prev(){if(current>0){current--;render()}}
+function showResult(){
+  let correct=0;
+  questions.forEach((q,i)=>{if(answers[i]===q[2])correct++});
+  const pct=Math.round(correct/questions.length*100);
+  const status=pct>=70?"APROVADO(A)":"AINDA PRECISA ESTUDAR";
+  const app=document.getElementById("app");
+  app.innerHTML=`
+    <div class="result">
+      <h1>🏁 Resultado</h1>
+      <div class="sub">Simulado Capitão-Amador — CPA 2026</div>
+      <div class="score">${correct}/40</div>
+      <h2>${pct}% de aproveitamento</h2>
+      <p><strong>${status}</strong></p>
+      <p class="small">Este é um simulado de estudo. O critério de aprovação de uma prova oficial pode envolver regras específicas de pontuação.</p>
+      <div class="actions"><button onclick="restart()">Refazer simulado</button></div>
+    </div>
+    <div class="review"><h2>Revisão</h2>
+      ${questions.map((q,i)=>{
+        const ok=answers[i]===q[2];
+        return `<div class="review-item ${ok?"ok":"bad"}"><strong>${i+1}. ${ok?"✓ Acertou":"✗ Errou"}</strong><br>Sua resposta: ${answers[i]||"—"}<br>Gabarito: ${q[2]}<br><span class="small">${q[0]}</span></div>`;
+      }).join("")}
+    </div>`;
+}
+function restart(){current=0;answers=Array(questions.length).fill(null);render()}
+render();
+</script>
+</body>
+</html>
