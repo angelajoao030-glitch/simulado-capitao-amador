@@ -90,7 +90,7 @@ function render(){
   const [text,opts,correct]=questions[current];
   app.innerHTML=`
     <h1>⚓ Simulado Capitão-Amador</h1>
-    <div class="sub">CPA 2026 • 40 questões • sem cálculos</div>
+    <div class="sub">CPA 2026 • 42 questões • sem cálculos</div>
     <div class="top"><span class="badge">Questão ${current+1} de ${questions.length}</span><span class="small">${Math.round((current/questions.length)*100)}% concluído</span></div>
     <div class="bar"><div class="fill" style="width:${((current+1)/questions.length)*100}%"></div></div>
     <div class="q">${current+1}. ${text}</div>
@@ -115,7 +115,7 @@ function showResult(){
     <div class="result">
       <h1>🏁 Resultado</h1>
       <div class="sub">Simulado Capitão-Amador — CPA 2026</div>
-      <div class="score">${correct}/40</div>
+      <div class="score">${correct}/${questions.length}</div>
       <h2>${pct}% de aproveitamento</h2>
       <p><strong>${status}</strong></p>
       <p class="small">Este é um simulado de estudo. O critério de aprovação de uma prova oficial pode envolver regras específicas de pontuação.</p>
